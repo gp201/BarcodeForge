@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # Maintain dependencies for pip (Python)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "python"
+      - "dependencies"
+    assignees:
+      - "gp201"
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/" # Location of your GitHub Actions workflow files
+    schedule:
+      interval: "weekly"
+    labels:
+      - "github_actions"
+      - "dependencies"
+    assignees:
+      - "gp201"
