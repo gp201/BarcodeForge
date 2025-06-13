@@ -112,7 +112,7 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
     additional_muts_processed_fn = f"{intermediate_dir}/additional_mutations.tsv"
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
     final_barcodes_csv_fn = "barcode.csv"
-    final_barcode_plot_html_fn = "barcode_plot.html"
+    final_barcode_plot_fn = "barcode_plot.pdf"
 
     mock_resolve_format.assert_called_once_with(
         temp_files["tree"], None, mock_cli_console, False
@@ -132,7 +132,7 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
         "-o",
         tree_pb_fn,
         "-T",
-        "1",
+        "8",
     ]
     expected_subprocess_calls = [
         call(
@@ -162,7 +162,7 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
                 "-o",
                 annotated_tree_pb_fn,
                 "-T",
-                "1",
+                "8",
             ],
             mock_cli_console,
             False,
@@ -182,7 +182,7 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
                 "-j",
                 auspice_json_fn,
                 "-T",
-                "1",
+                "8",
             ],
             mock_cli_console,
             False,
@@ -201,13 +201,16 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
         output_rerooted_lineage_paths_path=rerooted_lineage_paths_fn,
     )
     mock_create_barcodes.assert_called_once_with(
+        debug=False,
         input_file_path=rerooted_lineage_paths_fn,
         output_file_path=final_barcodes_csv_fn,
         prefix="",  # Default prefix ""
     )
     mock_create_plot.assert_called_once_with(
+        debug=False,  # Add the debug argument
         input_file_path=final_barcodes_csv_fn,
-        output_file_path=final_barcode_plot_html_fn,
+        chunk_size=100,  # Add chunk_size, default from CLI is 100
+        output_file_path=final_barcode_plot_fn,
     )
 
 
@@ -262,7 +265,7 @@ def test_barcode_command_custom_options(runner, temp_files, mocker):
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
 
     final_barcodes_csv_fn = f"{prefix}-barcode.csv"
-    final_barcode_plot_html_fn = f"{prefix}-barcode_plot.html"
+    final_barcode_plot_fn = f"{prefix}-barcode_plot.pdf"
 
     mock_resolve_format.assert_called_once_with(
         temp_files["tree"], None, mock_cli_console, False
@@ -354,13 +357,16 @@ def test_barcode_command_custom_options(runner, temp_files, mocker):
         output_rerooted_lineage_paths_path=rerooted_lineage_paths_fn,
     )
     mock_create_barcodes.assert_called_once_with(
+        debug=False,  # Add the debug argument
         input_file_path=rerooted_lineage_paths_fn,
         output_file_path=final_barcodes_csv_fn,
         prefix=prefix,
     )
     mock_create_plot.assert_called_once_with(
+        debug=False,  # Add the debug argument
         input_file_path=final_barcodes_csv_fn,
-        output_file_path=final_barcode_plot_html_fn,
+        chunk_size=100,  # Add chunk_size, default from CLI is 100 unless specified
+        output_file_path=final_barcode_plot_fn,
     )
 
 
@@ -412,7 +418,7 @@ def test_barcode_command_nexus_tree(runner, temp_files, mocker):
         "-o",
         tree_pb_fn,
         "-T",
-        "1",
+        "8",
     ]
     mock_run_subp.assert_any_call(
         expected_usher_cmd,
@@ -490,7 +496,7 @@ def test_barcode_command_debug_flag(runner, temp_files, mocker):
     additional_muts_processed_fn = f"{intermediate_dir}/additional_mutations.tsv"
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
     final_barcodes_csv_fn = "barcode.csv"
-    final_barcode_plot_html_fn = "barcode_plot.html"
+    final_barcode_plot_fn = "barcode_plot.pdf"
 
     mock_cli_console.print.assert_any_call(
         f"[{STYLES['debug']}]Debug mode is ON[/{STYLES['debug']}]"
@@ -513,13 +519,16 @@ def test_barcode_command_debug_flag(runner, temp_files, mocker):
         output_rerooted_lineage_paths_path=rerooted_lineage_paths_fn,
     )
     mock_create_barcodes.assert_called_once_with(
+        debug=True,
         input_file_path=rerooted_lineage_paths_fn,
         output_file_path=final_barcodes_csv_fn,
         prefix="",  # Default prefix ""
     )
     mock_create_plot.assert_called_once_with(
+        debug=True,  # Add the debug argument, should be True here
         input_file_path=final_barcodes_csv_fn,
-        output_file_path=final_barcode_plot_html_fn,
+        chunk_size=100,  # Add chunk_size, default from CLI is 100
+        output_file_path=final_barcode_plot_fn,
     )
 
     for call_obj in mock_run_subp.call_args_list:
