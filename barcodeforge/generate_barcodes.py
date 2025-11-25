@@ -120,7 +120,8 @@ def check_no_flip_pairs(barcode_file: str):
     Raises:
         Exception: If flip pairs are found in the barcode file.
     """
-    df_barcodes = pd.read_csv(barcode_file, index_col=0)
+    df_barcodes = pd.read_feather(barcode_file)
+    df_barcodes = df_barcodes.set_index(df_barcodes.columns[0])
     flipPairs = [
         (d, d[-1] + d[1 : len(d) - 1] + d[0])
         for d in df_barcodes.columns
@@ -231,7 +232,7 @@ def create_barcodes_from_lineage_paths(
 
     Args:
         input_file_path: Path to the input lineage paths file (TSV format from matUtils extract -C).
-        output_file_path: Path to save the generated barcodes (CSV format).
+        output_file_path: Path to save the generated barcodes (FEATHER format).
         prefix: Optional prefix to add to lineage names in the barcode file.
     """
     if debug:
@@ -276,8 +277,12 @@ def create_barcodes_from_lineage_paths(
     # Drop unclassified lineage if it exists
     if "unclassified" in df_barcodes.index:
         df_barcodes = df_barcodes.drop(index="unclassified")
+    # NOTE: The reset_index() call stores the index as the first column in the feather file.
+    # This is an important implementation detail: when reading the feather file back,
+    # the index will appear as a regular column and must be set manually if needed.
+    # See usage in the plot_barcode.py script and the check_no_flip_pairs function.
+    df_barcodes.reset_index().to_feather(output_file_path)
 
-    df_barcodes.to_csv(output_file_path)
     console.print(
         f"[{STYLES['success']}]Barcode file saved to: {output_file_path}[/{STYLES['success']}]"
     )

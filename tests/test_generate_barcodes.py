@@ -101,10 +101,10 @@ def test_replace_underscore_with_dash():
 
 @pytest.fixture
 def temp_barcode_file(tmp_path):
-    file_path = tmp_path / "test_barcodes.csv"
+    file_path = tmp_path / "test_barcodes.feather"
     data = {"mut1": [1, 0], "mut2": [0, 1]}
     df = pd.DataFrame(data, index=["L1", "L2"])
-    df.to_csv(file_path)
+    df.reset_index().to_feather(file_path)
     return file_path
 
 
@@ -118,10 +118,11 @@ def test_test_no_flip_pairs_no_flips(temp_barcode_file):
 
 @pytest.fixture
 def temp_barcode_file_with_flips(tmp_path):
-    file_path = tmp_path / "test_barcodes_flips.csv"
+    file_path = tmp_path / "test_barcodes_flips.feather"
     data = {"A123T": [1, 0], "T123A": [1, 0]}  # Flip pair
     df = pd.DataFrame(data, index=["L1", "L2"])
-    df.to_csv(file_path)
+
+    df.reset_index().to_feather(file_path)
     return file_path
 
 
@@ -142,12 +143,12 @@ def temp_lineage_paths_file(tmp_path):
 
 
 def test_create_barcodes_from_lineage_paths(temp_lineage_paths_file, tmp_path):
-    output_file = tmp_path / "output_barcodes.csv"
+    output_file = tmp_path / "output_barcodes.feather"
     create_barcodes_from_lineage_paths(
         False, str(temp_lineage_paths_file), str(output_file)
     )
     assert output_file.exists()
-    df = pd.read_csv(output_file)
+    df = pd.read_feather(output_file)
     assert not df.empty
     # Add more specific assertions based on expected output
     assert (

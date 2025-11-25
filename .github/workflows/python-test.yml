@@ -52,7 +52,7 @@ jobs:
         shell: bash -l {0}
         run: |
           barcodeforge --debug barcode barcodeforge/assets/reference.fasta barcodeforge/assets/aligned.fasta barcodeforge/assets/tree.nwk barcodeforge/assets/lineages.tsv --matutils-overlap 0.8 --threads 4 --prefix RSVa
-          diff -q RSVa-barcode.csv barcodeforge/assets/RSVa-barcode.csv || (echo "Files are not identical!" && exit 1)
+          diff -q RSVa-barcode.feather barcodeforge/assets/RSVa-barcode.feather || (echo "Files are not identical!" && exit 1)
 
   lint:
     runs-on: ubuntu-latest

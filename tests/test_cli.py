@@ -111,7 +111,7 @@ def test_barcode_command_default_options(runner, temp_files, mocker):
     auspice_json_fn = "auspice_tree.json"
     additional_muts_processed_fn = f"{intermediate_dir}/additional_mutations.tsv"
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
-    final_barcodes_csv_fn = "barcode.csv"
+    final_barcodes_csv_fn = "barcode.feather"
     final_barcode_plot_fn = "barcode_plot.pdf"
 
     mock_resolve_format.assert_called_once_with(
@@ -265,7 +265,7 @@ def test_barcode_command_custom_options(runner, temp_files, mocker):
     additional_muts_processed_fn = f"{intermediate_dir}/additional_mutations.tsv"
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
 
-    final_barcodes_csv_fn = f"{prefix}-barcode.csv"
+    final_barcodes_csv_fn = f"{prefix}-barcode.feather"
     final_barcode_plot_fn = f"{prefix}-barcode_plot.pdf"
 
     mock_resolve_format.assert_called_once_with(
@@ -497,7 +497,7 @@ def test_barcode_command_debug_flag(runner, temp_files, mocker):
     matutils_S_output_fn = f"{intermediate_dir}/samplePaths.txt"
     additional_muts_processed_fn = f"{intermediate_dir}/additional_mutations.tsv"
     rerooted_lineage_paths_fn = f"{intermediate_dir}/rerooted_lineage_paths.txt"
-    final_barcodes_csv_fn = "barcode.csv"
+    final_barcodes_csv_fn = "barcode.feather"
     final_barcode_plot_fn = "barcode_plot.pdf"
 
     mock_cli_console.print.assert_any_call(

@@ -1,4 +1,4 @@
-"""Plot barcode from CSV file."""
+"""Plot barcode from FEATHER file."""
 
 import pandas as pd
 from rich.console import Console
@@ -130,17 +130,18 @@ def create_barcode_plot(
     debug: bool, input_file_path: str, chunk_size: int, output_file_path: str
 ) -> None:
     """
-    Reads a barcode CSV file, transforms it to long format, and generates a plot.
+    Reads a barcode FEATHER file, transforms it to long format, and generates a plot.
 
     Args:
-        input_file_path: Path to the input barcode CSV file.
+        input_file_path: Path to the input barcode FEATHER file.
         output_file_path: Path to save the generated plot.
     """
     if debug:
         console.print(
             f"[{STYLES['info']}]Reading barcode data from: {input_file_path}[/{STYLES['info']}]"
         )
-    barcode_df = pd.read_csv(input_file_path, header=0, index_col=0)
+    barcode_df = pd.read_feather(input_file_path)
+    barcode_df = barcode_df.set_index(barcode_df.columns[0])
 
     if debug:
         console.print(
@@ -154,5 +155,10 @@ def create_barcode_plot(
         )
     barcode_df_long = barcode_df.stack().reset_index()
     barcode_df_long.columns = ["Lineage", "Mutation", "z"]
+
+    if debug:
+        console.print(
+            f"[{STYLES['info']}]Creating barcode visualization...[/{STYLES['info']}]"
+        )
 
     create_barcode_visualization(barcode_df_long, chunk_size, output_file_path)

@@ -269,24 +269,24 @@ def barcode(
         )
         base_name = "barcode"
 
-    csv_path = f"{base_name}.csv"
+    barcode_path = f"{base_name}.feather"
     plot_output_path = f"{base_name}_plot.pdf"
 
     create_barcodes_from_lineage_paths(
         debug=is_debug,
         input_file_path=os.path.join(intermediate_dir, "rerooted_lineage_paths.txt"),
-        output_file_path=csv_path,
+        output_file_path=barcode_path,
         prefix=clean_prefix,
     )
     create_barcode_plot(
         debug=is_debug,
-        input_file_path=csv_path,
+        input_file_path=barcode_path,
         chunk_size=plot_chunk_size,
         output_file_path=plot_output_path,
     )
 
     console.print(
-        f"[{STYLES['success']}]Generated barcodes are saved to '{csv_path}' and plot saved to '{plot_output_path}'[/{STYLES['success']}]"
+        f"[{STYLES['success']}]Generated barcodes are saved to '{barcode_path}' and plot saved to '{plot_output_path}'[/{STYLES['success']}]"
     )
 
 
