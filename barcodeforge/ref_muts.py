@@ -174,7 +174,7 @@ def process_and_reroot_lineages(
                 console.print(
                     f"[{STYLES['warning']}]Warning: Sample {sample_id} not found in FASTA file. Skipping.[/{STYLES['warning']}]"
                 )
-                break
+                continue
             root_seqs.append(_construct_root_sequence(root_muts, seq))
 
         if not root_seqs:
