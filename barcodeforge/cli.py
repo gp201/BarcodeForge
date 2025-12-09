@@ -295,9 +295,9 @@ def barcode(
 @click.option(
     "--output_metadata_path",
     type=click.Path(),
-    default="metadata.csv",
+    default="metadata.tsv",
     show_default=True,
-    help="Path to save the metadata table (CSV format).",
+    help="Path to save the metadata table (TSV format).",
 )
 @click.option(
     "--output_tree_path",
